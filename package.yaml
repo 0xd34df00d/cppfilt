@@ -37,3 +37,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - cppfilt
+    - hspec
