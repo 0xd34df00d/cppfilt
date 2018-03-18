@@ -25,6 +25,7 @@ dependencies:
 
 library:
   source-dirs: src
+  extra-libraries: stdc++
 
 tests:
   cppfilt-test:
