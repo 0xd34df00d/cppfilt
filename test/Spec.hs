@@ -1,14 +1,21 @@
 import Test.Hspec
 
-import System.Demangle
+import qualified System.Demangle as D
+import qualified System.Demangle.Pure as DP
 
-demangledIs :: String -> String -> IO ()
-demangledIs mangled ref = do
-  res <- demangle mangled
+ioDemangledIs :: String -> String -> IO ()
+ioDemangledIs mangled ref = do
+  res <- D.demangle mangled
   res `shouldBe` Just ref
+
+pureDemangledIs :: String -> String -> IO ()
+pureDemangledIs mangled ref = DP.demangle mangled `shouldBe` Just ref
 
 main :: IO ()
 main = hspec $ do
-  describe "demangle" $ do
+  describe "IO demangle" $ do
     it "demangles some operators" $ do
-      "_ZrsR11QDataStreamR5QUuid" `demangledIs` "operator>>(QDataStream&, QUuid&)"
+      "_ZrsR11QDataStreamR5QUuid" `ioDemangledIs` "operator>>(QDataStream&, QUuid&)"
+  describe "pure demangle" $ do
+    it "demangles some operators" $ do
+      "_ZrsR11QDataStreamR5QUuid" `pureDemangledIs` "operator>>(QDataStream&, QUuid&)"
