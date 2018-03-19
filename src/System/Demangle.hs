@@ -1,6 +1,13 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 
-module System.Demangle(demangle) where
+module System.Demangle(
+    demangle,
+    demangleBS,
+    demangleLBS
+  ) where
+
+import qualified Data.ByteString.Char8 as BS
+import qualified Data.ByteString.Lazy.Char8 as LBS
 
 import Foreign.C
 import Foreign.Marshal.Alloc
@@ -18,3 +25,9 @@ demangle str = withCString str $ \str' -> do
       res' <- peekCString res
       free res
       pure $ Just res'
+
+demangleBS :: BS.ByteString -> IO (Maybe BS.ByteString)
+demangleBS = fmap (fmap BS.pack) . demangle . BS.unpack
+
+demangleLBS :: LBS.ByteString -> IO (Maybe LBS.ByteString)
+demangleLBS = fmap (fmap LBS.pack) . demangle . LBS.unpack
