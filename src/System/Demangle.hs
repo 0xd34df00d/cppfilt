@@ -22,6 +22,7 @@ module System.Demangle(
 
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as LBS
+import Control.Exception
 
 import Foreign.C
 import Foreign.Marshal.Alloc
@@ -32,14 +33,16 @@ foreign import ccall "__cxa_demangle"
 
 -- |Try to demangle a 'String' with a mangled C++ name.
 demangle :: String -> IO (Maybe String)
-demangle str = withCString str $ \str' -> do
-  res <- cxa_demangle str' nullPtr nullPtr nullPtr
-  if res == nullPtr
-    then pure Nothing
-    else do
-      res' <- peekCString res
-      free res
-      pure $ Just res'
+demangle str = withCString str $ \str' ->
+  bracket
+    (cxa_demangle str' nullPtr nullPtr nullPtr)
+    free
+    $ \res ->
+      if res == nullPtr
+        then pure Nothing
+        else do
+          res' <- peekCString res
+          pure $ Just res'
 
 -- |Try to demangle a strict 'BS.ByteString' with a mangled C++ name.
 demangleBS :: BS.ByteString -> IO (Maybe BS.ByteString)
