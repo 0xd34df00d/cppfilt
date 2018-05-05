@@ -1,8 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications #-}
 
 import Test.Hspec
 
 import qualified Data.ByteString.Char8 as BS
+import Data.String
+import Control.Monad
 
 import qualified System.Demangle as D
 import qualified System.Demangle.Pure as DP
@@ -17,19 +20,23 @@ ioDemangledIs mangled ref = do
 pureDemangledIs :: (Eq a, Show a, CStringRepresentable a) => a -> a -> IO ()
 pureDemangledIs mangled ref = DP.demangle mangled `shouldBe` Just ref
 
+testData :: IsString a => [(String, [(a, a)])]
+testData = [
+    ("demangles some operators", [
+        ("_ZrsR11QDataStreamR5QUuid", "operator>>(QDataStream&, QUuid&)")
+      ])
+  ]
+
+runTests :: IsString a => (a -> a -> IO ()) -> SpecWith ()
+runTests func =
+  forM_ testData $ \(str, pairs) ->
+    it str $ forM_ pairs $ uncurry func
+
 main :: IO ()
 main = hspec $ do
   describe "Strings" $ do
-    describe "IO demangle" $ do
-      it "demangles some operators" $ do
-        "_ZrsR11QDataStreamR5QUuid" `ioDemangledIs` ("operator>>(QDataStream&, QUuid&)" :: String)
-    describe "pure demangle" $ do
-      it "demangles some operators" $ do
-        "_ZrsR11QDataStreamR5QUuid" `pureDemangledIs` ("operator>>(QDataStream&, QUuid&)" :: String)
+    describe "IO demangle" $ runTests @String ioDemangledIs
+    describe "Pure demangle" $ runTests @String pureDemangledIs
   describe "ByteStrings" $ do
-    describe "IO demangle" $ do
-      it "demangles some operators" $ do
-        "_ZrsR11QDataStreamR5QUuid" `ioDemangledIs` ("operator>>(QDataStream&, QUuid&)" :: String)
-    describe "pure demangle" $ do
-      it "demangles some operators" $ do
-        "_ZrsR11QDataStreamR5QUuid" `pureDemangledIs` ("operator>>(QDataStream&, QUuid&)" :: String)
+    describe "IO demangle" $ runTests @BS.ByteString ioDemangledIs
+    describe "Pure demangle" $ runTests @BS.ByteString pureDemangledIs
