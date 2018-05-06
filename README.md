@@ -9,11 +9,7 @@ hopefully referentially transparent).
 
 ## Supported systems
 
-For now demangling is done using `libstdc++`, which limits the library to the
-systems that use gcc.
+For now demangling is done using either `libstdc++` or `libc++` (controlled
+via the `use-libcpp` build flag). Adding support for other ABIs in a similar
+fashion should be easy.
 
-Supporting LLVM's `libc++` should be easy and just a matter of linking to a
-different C library, since they `libc++` and `libstdc++` use the same API
-w.r.t. demangling.
-
-Patches are welcome!
