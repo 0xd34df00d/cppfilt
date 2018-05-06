@@ -1,5 +1,7 @@
 # cppfilt
 
+[![Build Status](https://travis-ci.org/0xd34df00d/cppfilt.svg?branch=master)](https://travis-ci.org/0xd34df00d/cppfilt)
+
 This library provides bindings to the system ABI-exposed C++ name demangling
 routines. It provides both `IO`-based API in the `System.Demangle` module
 and the pure one in `System.Demangle.Pure`. The latter is deduced as unsafe
