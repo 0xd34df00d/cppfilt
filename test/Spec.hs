@@ -12,22 +12,22 @@ import qualified System.Demangle.Pure as DP
 
 import Data.CStringRepresentable
 
-ioDemangledIs :: (Eq a, Show a, CStringRepresentable a) => a -> a -> IO ()
+ioDemangledIs :: (Eq a, Show a, CStringRepresentable a) => a -> Maybe a -> IO ()
 ioDemangledIs mangled ref = do
   res <- D.demangle mangled
-  res `shouldBe` Just ref
+  res `shouldBe` ref
 
-pureDemangledIs :: (Eq a, Show a, CStringRepresentable a) => a -> a -> IO ()
-pureDemangledIs mangled ref = DP.demangle mangled `shouldBe` Just ref
+pureDemangledIs :: (Eq a, Show a, CStringRepresentable a) => a -> Maybe a -> IO ()
+pureDemangledIs mangled ref = DP.demangle mangled `shouldBe` ref
 
-testData :: IsString a => [(String, [(a, a)])]
+testData :: IsString a => [(String, [(a, Maybe a)])]
 testData = [
     ("demangles some operators", [
-        ("_ZrsR11QDataStreamR5QUuid", "operator>>(QDataStream&, QUuid&)")
+        ("_ZrsR11QDataStreamR5QUuid", Just "operator>>(QDataStream&, QUuid&)")
       ])
   ]
 
-runTests :: IsString a => (a -> a -> IO ()) -> SpecWith ()
+runTests :: IsString a => (a -> Maybe a -> IO ()) -> SpecWith ()
 runTests func =
   forM_ testData $ \(str, pairs) ->
     it str $ forM_ pairs $ uncurry func
