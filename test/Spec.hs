@@ -22,6 +22,9 @@ pureDemangledIs mangled ref = DP.demangle mangled `shouldBe` ref
 
 testData :: IsString a => [(String, [(a, Maybe a)])]
 testData = [
+    ("demangles simple class names", [
+        ("_ZTS5IInfo", Just "typeinfo name for IInfo")
+      ]),
     ("demangles some operators", [
         ("_ZrsR11QDataStreamR5QUuid", Just "operator>>(QDataStream&, QUuid&)")
       ]),
