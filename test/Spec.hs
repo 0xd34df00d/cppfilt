@@ -24,6 +24,9 @@ testData :: IsString a => [(String, [(a, Maybe a)])]
 testData = [
     ("demangles some operators", [
         ("_ZrsR11QDataStreamR5QUuid", Just "operator>>(QDataStream&, QUuid&)")
+      ]),
+    ("demangle fails", [
+        ("_test", Nothing)
       ])
   ]
 
