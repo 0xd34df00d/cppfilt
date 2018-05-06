@@ -30,7 +30,7 @@ foreign import ccall "__cxa_demangle"
   cxa_demangle :: CString -> CString -> Ptr CSize -> Ptr CInt -> IO CString
 
 -- |Try to demangle a mangled C++ name.
-demangle :: CStringRepresentable a => a -> IO (Maybe a)
+demangle :: CStringRepresentable s => s -> IO (Maybe s)
 demangle str = toCString str $ \str' ->
   bracket
     (cxa_demangle str' nullPtr nullPtr nullPtr)
