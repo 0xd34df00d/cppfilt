@@ -7,7 +7,9 @@
  Portability : wherever gcc lives
 
  This module provides bindings to the platform C++ ABI demangling routines
- (where the platform is currently limited to gcc).
+ (where the platform is currently limited to gcc). Any string-like type
+ implementing 'CStringRepresentable' can be used, though strict bytestrings are
+ the most performant.
 
  This module provides the raw 'IO'-living functions. Thin wrappers pretending
  to be pure live in the "System.Demangle.Pure" module.
