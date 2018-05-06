@@ -13,3 +13,7 @@ For now demangling is done using either `libstdc++` or `libc++` (controlled
 via the `use-libcpp` build flag). Adding support for other ABIs in a similar
 fashion should be easy.
 
+This approach is probably suboptimal, though, since one might want to try
+different ABIs that might be available simultaneously (since even clang and
+gcc mangle some names slightly differently), but it's not entirely obvious
+what the API should be like in this case.
