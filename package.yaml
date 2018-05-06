@@ -21,7 +21,12 @@ dependencies:
 
 library:
   source-dirs: src
-  extra-libraries: stdc++
+  when:
+  - condition: flag(use-libcpp) || os(darwin)
+    then:
+        extra-libraries: c++
+    else:
+        extra-libraries: stdc++
 
 tests:
   cppfilt-test:
@@ -45,3 +50,9 @@ benchmarks:
     dependencies:
     - cppfilt
     - criterion
+
+flags:
+  use-libcpp:
+    description: Use libc++ for demangling (if you're building your C++ code with clang) instead of libstdc++
+    manual: true
+    default: false
